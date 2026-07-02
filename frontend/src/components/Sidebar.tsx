@@ -14,6 +14,7 @@ import {
   ChevronLeft,
   User,
   LogOut,
+  Wallet,
 } from 'lucide-react';
 
 const navItems = [
@@ -23,6 +24,7 @@ const navItems = [
   { href: '/dashboard/alerts', icon: Bell, label: 'Cảnh báo' },
   { href: '/dashboard/predictions', icon: Map, label: 'Dự báo' },
   { href: '/dashboard/credit', icon: CreditCard, label: 'Tín dụng xanh' },
+  { href: '/dashboard/tokens', icon: Wallet, label: 'Token sinh tồn' },
 ];
 
 export default function Sidebar() {

@@ -6,9 +6,12 @@ interface AuthStore {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  token_balance: number;
+  token_tier: string;
   setAuth: (user: User, token: string) => void;
   setUser: (user: User) => void;
   setLoading: (loading: boolean) => void;
+  setTokenBalance: (balance: number, tier: string) => void;
   logout: () => void;
   hydrate: () => void;
 }
@@ -18,6 +21,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
   token: null,
   isAuthenticated: false,
   isLoading: true,
+  token_balance: 0,
+  token_tier: 'bronze',
 
   setAuth: (user, token) => {
     localStorage.setItem('auth_token', token);
@@ -32,10 +37,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   setLoading: (loading) => set({ isLoading: loading }),
 
+  setTokenBalance: (balance, tier) => set({ token_balance: balance, token_tier: tier }),
+
   logout: () => {
     localStorage.removeItem('auth_token');
     localStorage.removeItem('auth_user');
-    set({ user: null, token: null, isAuthenticated: false, isLoading: false });
+    set({ user: null, token: null, isAuthenticated: false, isLoading: false, token_balance: 0, token_tier: 'bronze' });
   },
 
   hydrate: () => {

@@ -199,3 +199,143 @@ export interface CreditApplicationPayload {
   term_months: number;
   purpose: string;
 }
+
+export interface Device {
+  id: string;
+  device_fingerprint: string;
+  user_id: string;
+  is_active: boolean;
+  first_seen_at: string;
+  last_seen_at: string;
+  vote_power: number;
+}
+
+export interface Proposal {
+  id: string;
+  title: string;
+  description: string;
+  proposal_type: 'algorithm_update' | 'fund_allocation' | 'system_parameter' | 'emergency_action';
+  target_param?: Record<string, unknown>;
+  status: 'pending' | 'active' | 'passed' | 'rejected' | 'executed';
+  created_by: string;
+  created_at: string;
+  voting_ends_at: string;
+  yes_votes: number;
+  no_votes: number;
+  total_votes: number;
+  required_threshold: number;
+  time_remaining_days?: number;
+}
+
+export interface Vote {
+  id: string;
+  proposal_id: string;
+  device_id: string;
+  vote: 'yes' | 'no' | 'abstain';
+  vote_power: number;
+  voted_at: string;
+  vote_signature: string;
+}
+
+export interface GovernanceStats {
+  total_devices: number;
+  active_voters: number;
+  open_proposals: number;
+  passed_proposals: number;
+  total_proposals: number;
+  voter_turnout_pct: number;
+}
+
+export interface TokenAccount {
+  id: string;
+  user_id: string;
+  balance: number;
+  lifetime_earned: number;
+  lifetime_spent: number;
+  tier: 'bronze' | 'silver' | 'gold' | 'platinum';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TokenTransaction {
+  id: string;
+  from_account_id: string | null;
+  to_account_id: string | null;
+  amount: number;
+  transaction_type: 'mesh_contribution' | 'data_contribution' | 'alert_response' | 'referral' | 'emergency_aid' | 'exchange_goods' | 'governance_reward';
+  reference_id: string | null;
+  description: string | null;
+  signature: string;
+  created_at: string;
+}
+
+export interface EmergencyListing {
+  id: string;
+  seller_id: string;
+  goods_type: 'rice' | 'water' | 'floatation' | 'medicine' | 'fuel' | 'shelter' | 'other';
+  quantity: number;
+  unit: 'kg' | 'liter' | 'piece' | 'pack';
+  price_per_unit: number;
+  location_zone: string;
+  status: 'active' | 'fulfilled' | 'cancelled' | 'expired';
+  description: string | null;
+  created_at: string;
+  expires_at: string;
+  seller_name: string | null;
+  time_remaining_hours: number;
+}
+
+export interface EmergencyOrder {
+  id: string;
+  listing_id: string;
+  buyer_id: string;
+  quantity: number;
+  total_tokens: number;
+  status: 'pending' | 'matched' | 'fulfilled' | 'disputed';
+  escrow_release: boolean;
+  created_at: string;
+  fulfilled_at: string | null;
+  listing_goods_type: string | null;
+  listing_location_zone: string | null;
+}
+
+export interface TokenMarketStats {
+  total_supply: number;
+  active_listings: number;
+  trades_24h: number;
+  emergency_reserve: number;
+  total_accounts: number;
+}
+
+export interface TierBenefits {
+  tier: string;
+  reward_multiplier: number;
+  vote_weight: number;
+  listing_fee_discount: number;
+}
+
+export interface TokenTransferPayload {
+  to_user_id: string;
+  amount: number;
+  description?: string;
+}
+
+export interface EmergencyListingPayload {
+  goods_type: string;
+  quantity: number;
+  unit: string;
+  price_per_unit: number;
+  location_zone: string;
+  description?: string;
+  expires_hours?: number;
+}
+
+export interface EmergencyOrderPayload {
+  listing_id: string;
+  quantity: number;
+}
+
+export interface ContributionPayload {
+  reference_id?: string;
+  description?: string;
+}
