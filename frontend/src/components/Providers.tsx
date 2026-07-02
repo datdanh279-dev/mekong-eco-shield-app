@@ -78,6 +78,29 @@ export function Providers({ children }: { children: ReactNode }) {
       })
   );
 
+  const [integrityVerified, setIntegrityVerified] = useState(false);
+
+  useEffect(() => {
+    const verify = async () => {
+      const { runIntegrityCheck } = await import('@/utils/watermark');
+      const passed = await runIntegrityCheck();
+      setIntegrityVerified(passed);
+    };
+    verify();
+  }, []);
+
+  useEffect(() => {
+    if (integrityVerified === false) {
+      try {
+        const { verifyPackageIntegrity } = require('@/utils/watermark');
+        const ok = verifyPackageIntegrity();
+        if (!ok) {
+          console.warn('[Watermark] Integrity check triggered');
+        }
+      } catch { }
+    }
+  }, [integrityVerified]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>

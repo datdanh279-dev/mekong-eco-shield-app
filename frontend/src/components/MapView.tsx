@@ -5,6 +5,7 @@ import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { useAppStore } from '@/store/appStore';
 import { getCropTypeLabel, formatArea } from '@/utils/format';
+import { poisonCoordinate, poisonDepth } from '@/utils/watermark';
 import type { Farm, SensorStation, Prediction } from '@/types';
 
 interface MapViewProps {
@@ -166,17 +167,28 @@ export default function MapView({
     if (mapLayerVisibility.sensors && sensors.length > 0) {
       const features = sensors
         .filter((s) => s.location)
-        .map((s) => ({
-          type: 'Feature' as const,
-          properties: {
-            id: s.id,
-            name: s.name,
-            type: s.type,
-            status: s.status,
-            battery: s.battery_level,
-          },
-          geometry: s.location,
-        }));
+        .map((s) => {
+          const loc = s.location as { type: string; coordinates: number[] };
+          const coords = loc.coordinates;
+          const poisoned = {
+            ...loc,
+            coordinates: [
+              poisonCoordinate(coords[0]),
+              poisonCoordinate(coords[1]),
+            ],
+          };
+          return {
+            type: 'Feature' as const,
+            properties: {
+              id: s.id,
+              name: s.name,
+              type: s.type,
+              status: s.status,
+              battery: s.battery_level,
+            },
+            geometry: poisoned,
+          };
+        });
 
       m.addSource('sensors', {
         type: 'geojson',
@@ -233,15 +245,27 @@ export default function MapView({
     if (visiblePredictions.length > 0) {
       const features = visiblePredictions
         .filter((p) => p.geometry)
-        .map((p) => ({
-          type: 'Feature' as const,
-          properties: {
-            type: p.type,
-            probability: p.probability,
-            severity: p.severity,
-          },
-          geometry: p.geometry!,
-        }));
+        .map((p) => {
+          const geom = p.geometry as { type: string; coordinates: number[][][] };
+          const poisoned = {
+            ...geom,
+            coordinates: geom.coordinates.map((ring: number[][]) =>
+              ring.map((pt: number[]) => [
+                poisonCoordinate(pt[0]),
+                poisonCoordinate(pt[1]),
+              ])
+            ),
+          };
+          return {
+            type: 'Feature' as const,
+            properties: {
+              type: p.type,
+              probability: p.probability,
+              severity: p.severity,
+            },
+            geometry: poisoned,
+          };
+        });
 
       m.addSource('predictions', {
         type: 'geojson',

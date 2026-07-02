@@ -131,6 +131,27 @@ async def rate_limit_middleware(request: Request, call_next):
 app.include_router(v1_router)
 
 
+@app.get("/watermark", tags=["Security"])
+async def get_watermark():
+    from app.core.watermark import get_mesh_constant, SIGNATURE, AUTHOR, run_integrity_check
+    checks = await run_integrity_check()
+    return {
+        "author": AUTHOR,
+        "mesh_constant": get_mesh_constant(),
+        "signature": SIGNATURE[:16] + "...",
+        "integrity": checks,
+    }
+
+
+@app.post("/watermark/verify", tags=["Security"])
+async def verify_watermark(data: dict):
+    from app.core.watermark import verify_request_integrity
+    package_id = data.get("package_id", "")
+    origin = data.get("origin", "")
+    valid, reason = verify_request_integrity(package_id, origin)
+    return {"valid": valid, "reason": reason}
+
+
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
 async def health_check() -> HealthResponse:
     db_status = "ok"
