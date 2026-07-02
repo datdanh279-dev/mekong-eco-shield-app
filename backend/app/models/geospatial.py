@@ -315,3 +315,69 @@ class ClimateRiskAssessment(Base, UUIDMixin, TimestampMixin):
 
     farm: Mapped[Optional["Farm"]] = relationship(back_populates="climate_risks")
     admin_zone: Mapped[Optional["AdminZone"]] = relationship()
+
+
+class AlertSeverity(str, enum.Enum):
+    CRITICAL = "critical"
+    HIGH = "high"
+    MEDIUM = "medium"
+    LOW = "low"
+    INFO = "info"
+
+
+class AlertType(str, enum.Enum):
+    FLOOD = "flood"
+    SALINITY = "salinity"
+    DROUGHT = "drought"
+    SOIL = "soil"
+    WEATHER = "weather"
+    SYSTEM = "system"
+
+
+class Alert(Base, UUIDMixin, TimestampMixin):
+    __tablename__ = "alerts"
+    __table_args__ = (
+        Index("ix_alerts_user_type", "user_id", "alert_type"),
+        Index("ix_alerts_severity_created", "severity", "created_at"),
+        Index("ix_alerts_unread", "user_id", "is_read"),
+    )
+
+    alert_type: Mapped[AlertType] = mapped_column(SQLEnum(AlertType), nullable=False)
+    severity: Mapped[AlertSeverity] = mapped_column(SQLEnum(AlertSeverity), nullable=False)
+    title: Mapped[str] = mapped_column(String(255), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+
+    user_id: Mapped[Optional[str]] = mapped_column(ForeignKey("users.id"), nullable=True)
+    farm_id: Mapped[Optional[str]] = mapped_column(ForeignKey("farms.id"), nullable=True)
+    admin_zone_id: Mapped[Optional[str]] = mapped_column(ForeignKey("admin_zones.id"), nullable=True)
+    flood_prediction_id: Mapped[Optional[str]] = mapped_column(ForeignKey("flood_predictions.id"), nullable=True)
+    salinity_prediction_id: Mapped[Optional[str]] = mapped_column(ForeignKey("salinity_predictions.id"), nullable=True)
+
+    is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_acknowledged: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    acknowledged_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    metadata: Mapped[dict] = mapped_column(JSON, default=dict, nullable=False)
+
+    flood_prediction: Mapped[Optional["FloodPrediction"]] = relationship(back_populates="alerts")
+    salinity_prediction: Mapped[Optional["SalinityPrediction"]] = relationship(back_populates="alerts")
+
+
+class AlertSubscription(Base, UUIDMixin, TimestampMixin):
+    __tablename__ = "alert_subscriptions"
+    __table_args__ = (
+        Index("ix_alert_subscriptions_user", "user_id"),
+        Index("ix_alert_subscriptions_active", "user_id", "is_active"),
+    )
+
+    user_id: Mapped[str] = mapped_column(ForeignKey("users.id"), nullable=False)
+    alert_types: Mapped[list] = mapped_column(ARRAY(String), nullable=False)
+    channels: Mapped[list] = mapped_column(ARRAY(String), nullable=False)
+
+    admin_zone_id: Mapped[Optional[str]] = mapped_column(ForeignKey("admin_zones.id"), nullable=True)
+    farm_id: Mapped[Optional[str]] = mapped_column(ForeignKey("farms.id"), nullable=True)
+    min_severity: Mapped[str] = mapped_column(String(20), default="info", nullable=False)
+    max_frequency_minutes: Mapped[int] = mapped_column(Integer, default=60, nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+    user: Mapped["User"] = relationship(back_populates="alerts_subscriptions")
