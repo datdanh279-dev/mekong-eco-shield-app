@@ -13,8 +13,8 @@ import { Sprout, MapPin, Radio, Droplets, Thermometer, Gauge, ArrowLeft } from '
 import Link from 'next/link';
 
 export default function FarmDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
+  const params = useParams<{ id: string }>();
+  const id = params?.id ?? '';
   const { data: farm, isLoading: farmLoading } = useFarm(id);
   const { data: sensors } = useFarmSensors(id);
   const { data: latestReadings } = useLatestReadings(id);

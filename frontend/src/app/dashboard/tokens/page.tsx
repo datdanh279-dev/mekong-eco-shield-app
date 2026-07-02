@@ -93,7 +93,7 @@ export default function TokensPage() {
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => contributeMesh.mutate()}
+            onClick={() => contributeMesh.mutate({})}
             disabled={contributeMesh.isPending}
             className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-accent disabled:opacity-50 transition-colors"
           >
@@ -101,7 +101,7 @@ export default function TokensPage() {
             Mesh
           </button>
           <button
-            onClick={() => contributeData.mutate()}
+            onClick={() => contributeData.mutate({})}
             disabled={contributeData.isPending}
             className="inline-flex items-center gap-1.5 rounded-lg bg-eco-green-600 px-3 py-2 text-sm font-medium text-white hover:bg-eco-green-700 disabled:opacity-50 transition-colors"
           >

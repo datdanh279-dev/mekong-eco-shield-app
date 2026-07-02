@@ -19,7 +19,7 @@ export default function MeshDashboardPage() {
   const [peerCount, setPeerCount] = useState(0);
   const [meshStrength, setMeshStrength] = useState(0);
   const [messageCount, setMessageCount] = useState(0);
-  const [nodeList, setNodeList] = useState<Array<{ id: string; type: string; connected: boolean; signalStrength: number; lastSeen: number; peerCount: number }>>([]);
+  const [nodeList, setNodeList] = useState<Array<{ id: string; type: 'gateway' | 'relay' | 'endpoint'; connected: boolean; signalStrength: number; lastSeen: number; peerCount: number }>>([]);
   const [edgeList, setEdgeList] = useState<Array<{ source: string; target: string; rssi: number }>>([]);
   const [log, setLog] = useState<string[]>([]);
   const [testMessage, setTestMessage] = useState('');

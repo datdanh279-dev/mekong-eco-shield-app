@@ -7,6 +7,7 @@ import { useAppStore } from '@/store/appStore';
 import { getCropTypeLabel, formatArea } from '@/utils/format';
 import { poisonCoordinate, poisonDepth } from '@/utils/watermark';
 import type { Farm, SensorStation, Prediction } from '@/types';
+import type { Point, Polygon, Feature } from 'geojson';
 
 interface MapViewProps {
   farms?: Farm[];
@@ -186,7 +187,7 @@ export default function MapView({
               status: s.status,
               battery: s.battery_level,
             },
-            geometry: poisoned,
+            geometry: poisoned as Point,
           };
         });
 
@@ -263,7 +264,7 @@ export default function MapView({
               probability: p.probability,
               severity: p.severity,
             },
-            geometry: poisoned,
+            geometry: poisoned as Polygon,
           };
         });
 

@@ -15,7 +15,7 @@ function generateRawFingerprint(): string {
     screen.height.toString(),
     screen.colorDepth.toString(),
     navigator.hardwareConcurrency?.toString() || '',
-    navigator.deviceMemory?.toString() || '',
+    (navigator as unknown as Record<string, number | undefined>).deviceMemory?.toString() || '',
   ];
 
   if ((navigator as unknown as Record<string, unknown>).webdriver) {

@@ -2,20 +2,16 @@
 const nextConfig = {
   output: 'standalone',
   reactStrictMode: true,
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/:path*`,
-      },
-      {
-        source: '/ws/:path*',
-        destination: `${process.env.NEXT_PUBLIC_WS_URL || 'ws://localhost:8000'}/ws/:path*`,
-      },
-    ];
-  },
   images: {
-    domains: ['localhost', 'api.mekongeco.shield'],
+    remotePatterns: [
+      { protocol: 'https', hostname: 'localhost' },
+      { protocol: 'https', hostname: 'api.mekongeco.shield' },
+    ],
+  },
+  experimental: {
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
 };
 

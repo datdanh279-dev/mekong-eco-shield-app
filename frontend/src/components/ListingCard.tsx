@@ -1,11 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Rice, Droplets, LifeBuoy, Pill, Fuel, Tent, Package, Clock, MapPin, User } from 'lucide-react';
+import { Wheat, Droplets, LifeBuoy, Pill, Fuel, Tent, Package, Clock, MapPin, User } from 'lucide-react';
 import type { EmergencyListing } from '@/types';
 
 const goodsIcons: Record<string, React.ReactNode> = {
-  rice: <Rice className="w-6 h-6" />,
+  rice: <Wheat className="w-6 h-6 text-amber-600" />,
   water: <Droplets className="w-6 h-6 text-water-blue-500" />,
   floatation: <LifeBuoy className="w-6 h-6 text-orange-500" />,
   medicine: <Pill className="w-6 h-6 text-alert-red-500" />,
