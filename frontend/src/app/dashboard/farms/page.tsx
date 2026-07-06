@@ -100,12 +100,12 @@ export default function FarmsPage() {
             >
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <Link
-                    href={`/dashboard/farms/${farm.id}`}
-                    className="font-semibold hover:text-eco-green-600 transition-colors"
-                  >
-                    {farm.name}
-                  </Link>
+                    <Link
+                      href={`/dashboard/farms/detail?id=${farm.id}`}
+                      className="font-semibold hover:text-eco-green-600 transition-colors"
+                    >
+                      {farm.name}
+                    </Link>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
                     <MapPin className="w-3 h-3" />
                     {farm.district}, {farm.province}
@@ -123,7 +123,7 @@ export default function FarmsPage() {
                     <div className="absolute right-0 top-8 w-40 rounded-lg border border-border bg-card shadow-lg z-10">
                       <div className="p-1">
                         <Link
-                          href={`/dashboard/farms/${farm.id}`}
+                          href={`/dashboard/farms/detail?id=${farm.id}`}
                           className="flex items-center gap-2 px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors"
                         >
                           <ExternalLink className="w-4 h-4" />

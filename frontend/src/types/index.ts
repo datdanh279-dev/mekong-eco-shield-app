@@ -2,7 +2,8 @@ export interface User {
   id: string;
   email: string;
   full_name: string;
-  role: 'farmer' | 'investor' | 'admin';
+  role: 'farmer' | 'investor' | 'admin' | 'user';
+  status: 'pending' | 'active' | 'rejected';
   phone?: string;
   avatar_url?: string;
   created_at: string;
@@ -157,7 +158,7 @@ export interface RegisterPayload {
   email: string;
   password: string;
   full_name: string;
-  role: 'farmer' | 'investor';
+  role: 'farmer' | 'investor' | 'user';
   phone?: string;
 }
 

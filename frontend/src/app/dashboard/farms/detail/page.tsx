@@ -1,6 +1,7 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useFarm } from '@/hooks/useFarms';
 import { useFarmSensors, useLatestReadings } from '@/hooks/useSensors';
 import { useCreditScore } from '@/hooks/useCredit';
@@ -12,9 +13,9 @@ import { getCropTypeLabel, formatArea, getSensorTypeLabel, getSensorUnit, getSen
 import { Sprout, MapPin, Radio, Droplets, Thermometer, Gauge, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
-export default function FarmDetailPage() {
-  const params = useParams<{ id: string }>();
-  const id = params?.id ?? '';
+function FarmDetailInner() {
+  const searchParams = useSearchParams();
+  const id = searchParams?.get('id') ?? '';
   const { data: farm, isLoading: farmLoading } = useFarm(id);
   const { data: sensors } = useFarmSensors(id);
   const { data: latestReadings } = useLatestReadings(id);
@@ -201,5 +202,26 @@ export default function FarmDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function FarmDetailPage() {
+  return (
+    <Suspense fallback={
+      <div className="space-y-6">
+        <div className="skeleton h-8 w-64" />
+        <div className="grid gap-6 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-4">
+            <div className="skeleton h-64 rounded-xl" />
+            <div className="skeleton h-48 rounded-xl" />
+          </div>
+          <div className="space-y-4">
+            <div className="skeleton h-80 rounded-xl" />
+          </div>
+        </div>
+      </div>
+    }>
+      <FarmDetailInner />
+    </Suspense>
   );
 }

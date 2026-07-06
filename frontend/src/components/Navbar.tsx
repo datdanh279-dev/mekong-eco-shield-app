@@ -57,9 +57,14 @@ export default function Navbar() {
           )}
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.svg" alt="Mekong Eco-Shield AI" className="w-8 h-8" />
-            <span className="hidden sm:inline font-bold text-lg text-eco-green-700 dark:text-eco-green-400">
-              Mekong Eco-Shield
-            </span>
+            <div className="hidden sm:block">
+              <span className="font-bold text-lg text-eco-green-700 dark:text-eco-green-400">
+                Mekong Eco-Shield
+              </span>
+              <span className="text-[10px] block leading-tight text-muted-foreground -mt-0.5">
+                Danh Đạt
+              </span>
+            </div>
           </Link>
         </div>
 

@@ -15,6 +15,7 @@ import {
   User,
   LogOut,
   Wallet,
+  Shield,
 } from 'lucide-react';
 
 const navItems = [
@@ -72,6 +73,22 @@ export default function Sidebar() {
               </Link>
             );
           })}
+          {user?.role === 'admin' && (
+            <Link
+              href="/dashboard/users"
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                pathname === '/dashboard/users'
+                  ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+              }`}
+              title={!sidebarOpen ? 'Quản lý người dùng' : undefined}
+            >
+              <Shield className="w-5 h-5 shrink-0" />
+              <span className={`truncate ${!sidebarOpen && 'lg:hidden'}`}>
+                Quản lý người dùng
+              </span>
+            </Link>
+          )}
         </nav>
 
         <div className="border-t border-border p-3 space-y-2">
@@ -83,6 +100,9 @@ export default function Sidebar() {
               <p className="text-sm font-medium truncate">{user?.full_name || 'Người dùng'}</p>
               <p className="text-xs text-muted-foreground truncate">
                 {user?.role === 'farmer' ? 'Nông dân' : user?.role === 'investor' ? 'Nhà đầu tư' : 'Quản trị viên'}
+              </p>
+              <p className="text-[10px] text-emerald-500 dark:text-emerald-400 font-medium">
+                Danh Đạt © 2026
               </p>
             </div>
           </div>

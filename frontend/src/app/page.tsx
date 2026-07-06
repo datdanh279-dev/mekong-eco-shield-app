@@ -6,8 +6,10 @@ import { useAuthStore } from '@/store/authStore';
 
 export default function Home() {
   const router = useRouter();
+  const user = useAuthStore((s) => s.user);
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const isLoading = useAuthStore((s) => s.isLoading);
+  const pendingRegister = useAuthStore((s) => s.pendingRegister);
 
   useEffect(() => {
     useAuthStore.getState().hydrate();
@@ -15,13 +17,16 @@ export default function Home() {
 
   useEffect(() => {
     if (!isLoading) {
-      if (isAuthenticated) {
+      if (isAuthenticated && user?.status === 'pending') {
+        useAuthStore.getState().logout();
+        router.replace('/auth/login');
+      } else if (isAuthenticated) {
         router.replace('/dashboard');
       } else {
         router.replace('/auth/login');
       }
     }
-  }, [isLoading, isAuthenticated, router]);
+  }, [isLoading, isAuthenticated, user, router]);
 
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-4rem)]">

@@ -9,7 +9,7 @@ import type { LoginPayload, RegisterPayload, User } from '@/types';
 
 export function useAuth() {
   const router = useRouter();
-  const { user, token, isAuthenticated, isLoading, setAuth, setUser, setLoading, logout } =
+  const { user, token, isAuthenticated, isLoading, setAuth, setUser, setLoading, setPendingRegister, logout } =
     useAuthStore();
 
   useEffect(() => {
@@ -22,6 +22,11 @@ export function useAuth() {
       return data;
     },
     onSuccess: (data) => {
+      if (data.user.status === 'pending') {
+        setPendingRegister({ email: data.user.email, full_name: data.user.full_name });
+        router.push('/auth/register?status=pending');
+        return;
+      }
       setAuth(data.user, data.token);
       router.push('/dashboard');
     },
@@ -29,11 +34,18 @@ export function useAuth() {
 
   const registerMutation = useMutation({
     mutationFn: async (payload: RegisterPayload) => {
-      const { data } = await api.post<{ user: User; token: string }>('/auth/register', payload);
+      const { data } = await api.post<{ user: User; token?: string }>('/auth/register', payload);
       return data;
     },
     onSuccess: (data) => {
-      setAuth(data.user, data.token);
+      if (data.user.status === 'pending') {
+        setPendingRegister({ email: data.user.email, full_name: data.user.full_name });
+        router.push('/auth/register?status=pending');
+        return;
+      }
+      if (data.token) {
+        setAuth(data.user, data.token);
+      }
       router.push('/dashboard');
     },
   });

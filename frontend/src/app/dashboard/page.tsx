@@ -168,6 +168,10 @@ export default function DashboardPage() {
           </div>
         </div>
       )}
+
+      <div className="text-center text-[10px] text-muted-foreground/50 pt-4 pb-2 border-t border-border">
+        © Danh Đạt 2026 · Mekong Eco-Shield AI v1.0
+      </div>
     </div>
   );
 }
